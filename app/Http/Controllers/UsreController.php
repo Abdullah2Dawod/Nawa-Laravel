@@ -7,6 +7,6 @@ use Illuminate\Http\Request;
 class UsreController extends Controller
 {
     public function show (){
-        return view('ff');
+        return view('star');
     }
 }
