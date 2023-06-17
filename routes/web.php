@@ -32,6 +32,3 @@ Route::get('/', function () {
 
 Route::resource('/admin/products', ProductsController::class);
 Route::resource('/admin/categories', CategoriesController::class);
-
-
-Route::get('/user' , [UsreController::class, 'show']);

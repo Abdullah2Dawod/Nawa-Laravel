@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,14 +17,15 @@ class ProductsController extends Controller
     {
 
         // $products = DB::table('products')
-        // ->join('categories' , 'categories.id' , '=' , 'products.category_id')
+        // ->leftJoin('categories' , 'categories.id' , '=' , 'products.category_id')
         // ->select([
         //     'products.*',
         //     'categories.name as category_name'
         // ])
         // ->get();
 
-        $products = Product::leftJoin('categories' , 'categories.id' , '=' , 'products.category_id')
+        $products = Product::leftJoin
+        ('categories' , 'categories.id' , '=' , 'products.category_id')
         ->select([
             'products.*',
             'categories.name as category_name'
@@ -41,7 +43,11 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        return view('admin.products.create');
+        $categories = Category::all();
+        return view('admin.products.create' , [
+            'product' => new Product(),
+            'categories' => $categories,
+        ]);
     }
 
     /**
@@ -53,6 +59,7 @@ class ProductsController extends Controller
 
         $product->name = $request->input('name');
         $product->slug = $request->input('slug');
+        $product->category_id = $request->input('category_id');
         $product->description = $request->input('description');
         $product->short_description = $request->input('short_description');
         $product->price = $request->input('price');
@@ -60,7 +67,9 @@ class ProductsController extends Controller
 
         $product->save();
 
-        return redirect()->route('products.index');
+        return redirect()
+        ->route('products.index')
+        ->with('success' , "Product $product->name Has Been Added Successfully");
     }
 
     /**
@@ -76,7 +85,13 @@ class ProductsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $categories = Category::all();
+
+        return view('admin.products.edit' , [
+            'product' => $product,
+            'categories' => $categories,
+        ]);
     }
 
     /**
@@ -84,14 +99,38 @@ class ProductsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        $product->name = $request->input('name');
+        $product->slug = $request->input('slug');
+        $product->category_id = $request->input('category_id');
+        $product->description = $request->input('description');
+        $product->short_description = $request->input('short_description');
+        $product->price = $request->input('price');
+        $product->compare_price = $request->input('compare_price');
+
+        $product->save();
+
+        return redirect()
+        ->route('products.index')
+        ->with('success' , "Product $product->name Has Been Updated Successfully");
+        ;
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        // Product::destroy($id);
+
+        return redirect()
+        ->route('products.index')
+        ->with('success' , "Product $product->name Has Been Deleted Successfully");
     }
 }
