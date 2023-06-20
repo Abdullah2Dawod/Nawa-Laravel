@@ -15,10 +15,11 @@
             </div>
         @endif
     </div>
-    <table class="table table-striped">
+    <table class="table table-striped text-center">
         <thead>
             <tr class="table-dark">
                 <th>Id</th>
+                <th>Images</th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Price</th>
@@ -31,9 +32,23 @@
             @foreach ($products as $product)
                 <tr>
                     <td>{{ $product->id }}</td>
+                    {{--  <th>
+                        @if($product->image)
+                        <a href="{{asset('storage/' . $product->image)}}">
+                            <img src="{{Storage::disk('public')->url($product->image)}}" width="60" alt="">
+                        </a>
+                        @else
+                        <img src="https://placehold.co/60x60?text=No+Image" alt="">
+                        @endif
+                    </th>  --}}
+                    <td>
+                        <a href="{{$product->image_link}}">
+                            <img src="{{$product->image_link}}" width="60" alt="">
+                        </a>
+                    </td>
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->category_name }}</td>
-                    <td>{{ $product->price }}</td>
+                    <td>{{ $product->price_formatted }}</td>
                     <td>{{ $product->status }}</td>
                     <td><a href="{{ route('products.edit', $product->id) }}" class="btn-sm btn btn-outline-secondary"><i
                                 class="far fa-edit"></i< /a>
