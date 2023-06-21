@@ -32,20 +32,16 @@
             @foreach ($products as $product)
                 <tr>
                     <td>{{ $product->id }}</td>
-                    {{--  <th>
-                        @if($product->image)
-                        <a href="{{asset('storage/' . $product->image)}}">
-                            <img src="{{Storage::disk('public')->url($product->image)}}" width="60" alt="">
+                    <th>
+                        <a href="{{ $product->image_url }}">
+                            <img src="{{ $product->image_url }}" width="60" alt="">
                         </a>
-                        @else
-                        <img src="https://placehold.co/60x60?text=No+Image" alt="">
-                        @endif
-                    </th>  --}}
-                    <td>
+                    </th>
+                    {{--  <td>
                         <a href="{{$product->image_link}}">
                             <img src="{{$product->image_link}}" width="60" alt="">
                         </a>
-                    </td>
+                    </td>  --}}
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->category_name }}</td>
                     <td>{{ $product->price_formatted }}</td>

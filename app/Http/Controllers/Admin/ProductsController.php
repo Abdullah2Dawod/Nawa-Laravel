@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -91,7 +92,14 @@ class ProductsController extends Controller
         }
         $product = Product::create( $date ); //وهنا تعني استدعاء كل الحقول ال1ي تم التحقق منها وعمل عليها فلديشن
 
-
+        if($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as  $file){
+                ProductImage::create([
+                    'product_id'=>$product->id,
+                    'image' => $file->store('uploads/images' , 'public'),
+                ]);
+        }
+    }
         // $product = new Product();
         // $product->name = $request->input('name');
         // $product->slug = $request->input('slug');
@@ -119,22 +127,24 @@ class ProductsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        $product = Product::findOrFail($id);
+        // $product = Product::findOrFail($id);
         $categories = Category::all();
+        $gallery = ProductImage::Where('product_id' , '=' , $product->id)->get();
 
         return view('admin.products.edit', [
             'product' => $product,
             'categories' => $categories,
             'status_options' => Product::statusOptions(),
+            'gallery' => $gallery,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, string $id)
+    public function update(ProductRequest $request, Product $product)
     {
         // $rules = [
         //     'name' => 'required|max:255|min:3',
@@ -151,7 +161,7 @@ class ProductsController extends Controller
         // $messages = $this->messages();
         // $request->validate($rules, $messages);
 
-        $product = Product::findOrFail($id);
+        // $product = Product::findOrFail($id);
 
         $date = $request->validated();
         if ($request->hasFile('image')) {
@@ -166,6 +176,15 @@ class ProductsController extends Controller
         if ($old_image && $old_image != $product->image) {
             Storage::disk('public')->delete($old_image);
         }
+
+        if($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as  $file){
+                ProductImage::create([
+                    'product_id'=>$product->id,
+                    'image' => $file->store('uploads/images' , 'public'),
+                ]);
+        }
+    }
 
 
         // $product->name = $request->input('name');
@@ -187,10 +206,10 @@ class ProductsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
 
-        $product = Product::findOrFail($id);
+        // $product = Product::findOrFail($id);
 
         $product->delete();
 

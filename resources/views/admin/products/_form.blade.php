@@ -11,27 +11,10 @@
 
 <div class="row">
     <div class="col-md-4">
-        <div class="mb-3">
-            <label for="name">Product Name</label>
-            <div>
-                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-                    value="{{ old('name', $product->name) }}">
-                @error('name')
-                    <p class="invalid-feedback"> {{ $message }}</p>
-                @enderror
-            </div>
-        </div>
+        <x-form.input label="Product Name" id="name" name="name" value="{{ $product->name }}" type="text" />
 
-        <div class="mb-3">
-            <label for="slug">URL Slug</label>
-            <div>
-                <input type="text" class="form-control @error('slug') is-invalid @enderror" id="slug"
-                    name="slug" value="{{ old('slug', $product->slug) }}">
-                @error('slug')
-                    <p class="invalid-feedback"> {{ $message }}</p>
-                @enderror
-            </div>
-        </div>
+        <x-form.input label="Url slug" id="slug" name="slug" value="{{ $product->slug }}" type="text" />
+
 
         <div class="form-floating mb-3">
             <label for="category_id">Category</label>
@@ -61,66 +44,49 @@
             </div>
         </div>
 
-        <div class="mb-3">
-            <label for="description">Description</label>
-            <div>
-                <textarea type="text" class="form-control @error('description') is-invalid @enderror" id="description"
-                    name="description" value="{{ old('description', $product->description) }}" rows="2"></textarea>
-                @error('description')
-                    <p class="invalid-feedback"> {{ $message }}</p>
-                @enderror
-            </div>
-        </div>
+        <x-form.textarea label="Description" id="description" name="description" value="{{ $product->description }}" />
 
-        <div class="form-floating mb-3">
-            <label for="short_description">Short Description</label>
-            <div>
-                <input type="text" class="form-control @error('short_description') is-invalid @enderror"
-                    id="short_description" name="short_description"
-                    value="{{ old('short_description', $product->short_description) }}" placeholder="Description">
-                @error('short_description')
-                    <p class="invalid-feedback"> {{ $message }}</p>
-                @enderror
-            </div>
-        </div>
+        <x-form.textarea label="short_description" id="short_description" name="short_description"
+            value="{{ $product->short_description }}" />
+
     </div>
 
     <div class="col-md-4">
 
-        <div class="form-floating mb-3">
-            <label for="price">Product Price</label>
-            <div>
-                <input type="number" step="0.1" min="0"
-                    class="form-control @error('price') is-invalid @enderror" id="price" name="price"
-                    value="{{ old('price', $product->price) }}">
-                @error('price')
-                    <p class="invalid-feedback"> {{ $message }}</p>
-                @enderror
-            </div>
-        </div>
+        <x-form.input label="Price" id="price" name="price" value="{{ $product->price }}" type="number" />
 
-        <div class="form-floating mb-3">
-            <label for="compare_price">compare price</label>
-            <div>
-                <input type="number" step="0.1" min="0"
-                    class="form-control @error('compare_price') is-invalid @enderror" id="compare_price"
-                    name="compare_price" value="{{ old('compare_price', $product->compare_price) }}">
-                @error('compare_price')
-                    <p class="invalid-feedback"> {{ $message }}</p>
-                @enderror
-            </div>
-        </div>
+        <x-form.input label="Compare Price" id="compare_price" name="compare_price"
+            value="{{ $product->compare_price }}" type="number" />
 
-        <div class="form-floating mb-3">
+
+        <div class="mb-3">
             <label for="image">image</label>
             <div>
-                <input type="file" class="form-control @error('image') is-invalid @enderror" id="image"
-                    name="image">
+                <img src="{{ $product->image_url }}" width="60" alt="">
+                <input type="file" class="form-control" id="image" name="image">
                 @error('image')
                     <p class="invalid-feedback"> {{ $message }}</p>
                 @enderror
             </div>
         </div>
+
+        <div class="mb-3">
+            <label for="image">Product Gallery</label>
+            <div class="div">
+                <input type="file" class="form-control" id="gallery" name="gallery[]" multiple>
+            </div>
+            @if ($gallery ?? false)
+                <div class="row">
+                    @foreach ($gallery as $image)
+                        <div class="col-md-3">
+                            <img src="{{ $image->url }}" class="img-fluid">
+                        </div>
+                    @endforeach
+                </div>
+
+            @endif
+        </div>
+
 
     </div>
 </div>
