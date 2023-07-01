@@ -1,13 +1,15 @@
 @extends('layouts.admin')
 @section('content')
-    <div class="row">
-        <div class="col-6">
-            <h2 class="mb-4 fs-3"><?= $title ?></h2>
+    <header class="mb-4 d-flex">
+        <h2 class="mb-4 fs-3">{{ $title }} </h2>
+        <div class="ml-auto">
+            <a href="{{ route('categories.create') }}" type="button" class="btn btn-info p-2">Create Category
+                <i class="fas fa-plus"></i></a>
+            <a href="{{ route('categories.trashed') }}" type="button" class="btn btn-danger p-2">Categories Trashed
+                <i class="fas fa-trash-alt"></i></a>
         </div>
-        <div class="col-6 grid d-flex align-items-end flex-column">
-            <a href="{{ route('categories.create') }}" type="button" class="btn btn-info p-2">Create category</a>
-        </div>
-    </div>
+    </header>
+
     <div class="row">
         @if (session()->has('success'))
             <div class="alert alert-success" role="alert">
@@ -45,4 +47,6 @@
             @endforeach
         </tbody>
     </table>
+
+    {{ $categories->links() }}
 @endsection

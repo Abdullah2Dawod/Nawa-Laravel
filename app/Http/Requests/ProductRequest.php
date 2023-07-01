@@ -32,7 +32,7 @@ class ProductRequest extends FormRequest
             'description_short' => 'nullable|string|max:500',
             'price' => 'required|numeric|min:0',
             'compare_price' => 'nullable|numeric|min:0|gt:price',
-            'image' => 'nullable|image|dimensions:min_width=400,min_height=300|max:500',
+            'image' => 'nullable|image|dimensions:min_width=400,min_height=300|max:1024',
             'status' => 'required|in:active,draft,archived',
             'gallery' => 'nullable|array',
             'gallery.*' =>'image',

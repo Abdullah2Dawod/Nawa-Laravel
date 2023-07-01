@@ -2,23 +2,43 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     const STATUS_ACTIVE   = 'active';
     const STATUS_DRAFT    = 'draft';
     const STATUS_ARCHIVED = 'archived';
 
     protected $fillable = [
-        'name' , 'slug' , 'category_id' , 'description' , 'short_description' , 'price' ,
-        'compare_price' , 'status' , 'image'
+        'name', 'slug', 'category_id', 'description', 'short_description', 'price',
+        'compare_price', 'status', 'image'
     ];
+
+    // protected static function booted()
+    // {
+    //     static::addGlobalScope('owner' , function(Builder $query)
+    //     {
+    //         $query->where('user_id' , '=' , 1);
+    //     });
+    // }
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('status' , '=' , 'active');
+    }
+
+    public function scopeStatus(Builder $query , $status)
+    {
+        $query->where('status' , '=' , $status);
+    }
 
     public static function statusOptions()
     {
@@ -45,8 +65,12 @@ class Product extends Model
 
     public function getPriceFormattedAttribute($value)
     {
-        $price = new NumberFormatter('en' , NumberFormatter::CURRENCY); //ar.العربية
-        return $price->formatCurrency($this->price , 'ILS');  // ILS -
+        $price = new NumberFormatter('en', NumberFormatter::CURRENCY); //ar.العربية
+        return $price->formatCurrency($this->price, 'ILS');  // ILS -
     }
-
+    public function getComparePriceFormattedAttribute($value)
+    {
+        $compare_price = new NumberFormatter('en', NumberFormatter::CURRENCY); //ar.العربية
+        return $compare_price->formatCurrency($this->compare_price, 'ILS');  // ILS -
+    }
 }

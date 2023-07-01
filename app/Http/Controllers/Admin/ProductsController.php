@@ -10,6 +10,7 @@ use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Expr\Cast\String_;
 
 class ProductsController extends Controller
 {
@@ -32,7 +33,11 @@ class ProductsController extends Controller
                 'products.*',
                 'categories.name as category_name'
             ])
-            ->get();
+            // ->withoutGlobalScope('owner') // وتعني ايقاف قلوبل سكوب بأسم اونر
+            // ->withoutGlobalScopes() // وتعني ايقاف جميع القلوبل سكوب في الموديل
+            // ->active()
+            // ->status('draft')
+            ->paginate(12);
 
         return view('admin.products.index', [
             'title' => 'Products List',
@@ -87,19 +92,19 @@ class ProductsController extends Controller
         $date = $request->validated();
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $path = $file->store('uploads/images' , 'public');
+            $path = $file->store('uploads/images', 'public');
             $date['image'] = $path;
         }
-        $product = Product::create( $date ); //وهنا تعني استدعاء كل الحقول ال1ي تم التحقق منها وعمل عليها فلديشن
+        $product = Product::create($date); //وهنا تعني استدعاء كل الحقول ال1ي تم التحقق منها وعمل عليها فلديشن
 
-        if($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as  $file){
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as  $file) {
                 ProductImage::create([
-                    'product_id'=>$product->id,
-                    'image' => $file->store('uploads/images' , 'public'),
+                    'product_id' => $product->id,
+                    'image' => $file->store('uploads/images', 'public'),
                 ]);
+            }
         }
-    }
         // $product = new Product();
         // $product->name = $request->input('name');
         // $product->slug = $request->input('slug');
@@ -131,7 +136,7 @@ class ProductsController extends Controller
     {
         // $product = Product::findOrFail($id);
         $categories = Category::all();
-        $gallery = ProductImage::Where('product_id' , '=' , $product->id)->get();
+        $gallery = ProductImage::Where('product_id', '=', $product->id)->get();
 
         return view('admin.products.edit', [
             'product' => $product,
@@ -166,25 +171,25 @@ class ProductsController extends Controller
         $date = $request->validated();
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $path = $file->store('uploads/images' , 'public');
+            $path = $file->store('uploads/images', 'public');
             $date['image'] = $path;
         }
 
-            $old_image = $product->image;
-        $product ->update( $date );
+        $old_image = $product->image;
+        $product->update($date);
 
         if ($old_image && $old_image != $product->image) {
             Storage::disk('public')->delete($old_image);
         }
 
-        if($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as  $file){
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as  $file) {
                 ProductImage::create([
-                    'product_id'=>$product->id,
-                    'image' => $file->store('uploads/images' , 'public'),
+                    'product_id' => $product->id,
+                    'image' => $file->store('uploads/images', 'public'),
                 ]);
+            }
         }
-    }
 
 
         // $product->name = $request->input('name');
@@ -199,7 +204,7 @@ class ProductsController extends Controller
 
         return redirect()
             ->route('products.index')
-            ->with('success', "Product $product->name Has Been Updated Successfully");;
+            ->with('success', "Product $product->name Has Been Updated Successfully");
     }
 
 
@@ -212,11 +217,6 @@ class ProductsController extends Controller
         // $product = Product::findOrFail($id);
 
         $product->delete();
-
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
-
 
         // Product::destroy($id);
 
@@ -247,5 +247,35 @@ class ProductsController extends Controller
             'image' => 'nullable|image|dimensions:min_width=400,min_height=300|max:500',
             'status' => 'required|in:active,draft,archived',
         ];
+    }
+
+    // خاص بصفحة عرض المنتجات المحذوفة لل products
+    public function trashed()
+    {
+        $products = Product::onlyTrashed()->paginate(12);
+        return view('admin.products.trashed', [
+            'products' => $products
+        ]);
+    }
+
+    public function restore(String $id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->restore();
+        return redirect()
+            ->route('products.index')
+            ->with('success', "Product ({$product->name}) restored");
+    }
+
+    public function forceDelete(String $id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->forceDelete();
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+        return redirect()
+            ->route('products.trashed')
+            ->with('success', "Product ({$product->name}) Deleted Forever");
     }
 }
