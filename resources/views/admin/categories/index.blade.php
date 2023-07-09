@@ -22,6 +22,8 @@
             <tr class="table-dark">
                 <th>Id</th>
                 <th>Name</th>
+                <th>product Count</th>
+                <th>product AVG Price</th>
                 <th>Edit</th>
                 <th>Delete</th>
 
@@ -32,6 +34,8 @@
                 <tr>
                     <td>{{ $category->id }}</td>
                     <td>{{ $category->name }} </td>
+                    <td>{{ $category->products_count }} </td>
+                    <td>{{ $category->products_avg_price }} </td>
                     <td><a href="{{ route('categories.edit', $category->id) }}" class="btn-sm btn btn-outline-secondary">
                             <i class="far fa-edit"></i< /a>
                     </td>

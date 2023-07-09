@@ -8,16 +8,28 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use PhpParser\Node\Expr\Cast\String_;
 
 class ProductsController extends Controller
 {
+
+    public function __construct()
+    {
+        $categories = Category::all();
+        View::share([
+            "categories" => $categories,
+            'status_options' => Product::statusOptions(),
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
 
         // $products = DB::table('products')
@@ -37,7 +49,8 @@ class ProductsController extends Controller
             // ->withoutGlobalScopes() // وتعني ايقاف جميع القلوبل سكوب في الموديل
             // ->active()
             // ->status('draft')
-            ->paginate(12);
+            ->filter($request)
+            ->paginate(10);
 
         return view('admin.products.index', [
             'title' => 'Products List',
@@ -50,11 +63,11 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        // $categories = Category::all();
         return view('admin.products.create', [
             'product' => new Product(),
-            'categories' => $categories,
-            'status_options' => Product::statusOptions(),
+            // 'categories' => $categories,
+            // 'status_options' => Product::statusOptions(),
         ]);
     }
 
@@ -95,6 +108,8 @@ class ProductsController extends Controller
             $path = $file->store('uploads/images', 'public');
             $date['image'] = $path;
         }
+        $date['user_id'] = Auth::id();
+
         $product = Product::create($date); //وهنا تعني استدعاء كل الحقول ال1ي تم التحقق منها وعمل عليها فلديشن
 
         if ($request->hasFile('gallery')) {
@@ -135,13 +150,13 @@ class ProductsController extends Controller
     public function edit(Product $product)
     {
         // $product = Product::findOrFail($id);
-        $categories = Category::all();
+        // $categories = Category::all();
         $gallery = ProductImage::Where('product_id', '=', $product->id)->get();
 
         return view('admin.products.edit', [
             'product' => $product,
-            'categories' => $categories,
-            'status_options' => Product::statusOptions(),
+            // 'categories' => $categories,
+            // 'status_options' => Product::statusOptions(),
             'gallery' => $gallery,
         ]);
     }

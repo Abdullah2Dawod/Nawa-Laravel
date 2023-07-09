@@ -9,6 +9,7 @@
                 <i class="fas fa-trash-alt"></i></a>
         </div>
     </header>
+    <hr>
 
     <div class="row">
         @if (session()->has('success'))
@@ -17,6 +18,25 @@
             </div>
         @endif
     </div>
+
+    <form action="{{ URL::current() }}" method="get" class="form-inline">
+        <input type="text" name="search" class="form-control mb-2 mr-sm-2" value="{{ request('saerch') }}" placeholder="Search...">
+        <select name="category_id" class="form-control mb-2 mr-sm-2">
+            <option value="">All Categories</option>
+            @foreach ($categories as $category )
+            <option value="{{ $category->id }}" @selected(request('$category->id') == $category->id)>{{$category->name}}</option>
+            @endforeach
+        </select>
+        <select name="status" class="form-control mb-2 mr-sm-2">
+            <option value="">Status</option>
+            @foreach ($status_options as $value => $kay )
+            <option value="{{ $value }}" @selected(request('status') == $value)>{{$kay}}</option>
+            @endforeach
+        </select>
+        <input type="number" name="price_min" class="form-control mb-2 mr-sm-2" value="{{ request('price_min') }}" placeholder="Min Price">
+        <input type="number" name="price_max" class="form-control mb-2 mr-sm-2" value="{{ request('price_max') }}" placeholder="Max Price">
+        <button type="submit" class="btn btn-success mb-2 mr-sm-2" style="border: none">Search</button>
+    </form>
     <table class="table table-striped text-center">
         <thead>
             <tr class="table-dark">

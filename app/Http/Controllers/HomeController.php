@@ -10,7 +10,8 @@ class HomeController extends Controller
     public function index()
     {
         $products = Product::withoutGlobalScope('owner')
-            ->status('active')
+            ->with('category')  //Eager loud
+            ->active()
             ->latest('updated_at')
             ->take(8)
             ->get();

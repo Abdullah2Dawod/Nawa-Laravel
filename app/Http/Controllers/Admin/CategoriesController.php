@@ -14,7 +14,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(12);
+        $categories = Category::withAvg('products', 'price')->withCount('products')->paginate();
 
         return view('admin.categories.index', [
             'title' => 'categories List',

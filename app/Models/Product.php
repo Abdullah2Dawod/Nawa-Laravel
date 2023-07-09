@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
 
@@ -19,14 +20,30 @@ class Product extends Model
 
     protected $fillable = [
         'name', 'slug', 'category_id', 'description', 'short_description', 'price',
-        'compare_price', 'status', 'image'
+        'compare_price', 'status', 'image', 'user_id',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class)->withDefault([
+            'name' => 'Non-Category',
+        ]);
+    }
+
+    public function cart()
+    {
+        return $this->belongsToMany(User::class,
+        'carts' , 'product_id' , 'user_id', 'id ' , 'id')
+        ->withPivot(['quantity'])
+        ->withTimestamps()
+        ->using(Cart::class);
+    }
 
     // protected static function booted()
     // {
     //     static::addGlobalScope('owner' , function(Builder $query)
     //     {
-    //         $query->where('user_id' , '=' , 1);
+    //         $query->where('user_id' , '=' , Auth::id());
     //     });
     // }
 
@@ -38,6 +55,29 @@ class Product extends Model
     public function scopeStatus(Builder $query , $status)
     {
         $query->where('status' , '=' , $status);
+    }
+
+    public function scopeFilter(Builder $query , $request)
+    {
+        $query->when($request->search,function($query , $value) {
+            $query->where(function($query) use($value){
+                $query->where('products.name' , 'LIKE' , "%{$value}%")
+                ->orWhere('products.description' , 'LIKE' , "%{$value}%");
+            });
+        })
+        ->when($request->status,function($query , $value) {
+            $query->where('products.status' , 'LIKE' , "$value");
+        })
+        ->when($request->category_id,function($query , $value) {
+            $query->where('products.category_id' , '=' , "$value");
+        })
+        ->when($request->price_min,function($query , $value) {
+            $query->where('products.price' , '<=' , "$value");
+        })
+        ->when($request->price_max,function($query , $value) {
+            $query->where('products.price' , '>=' , "$value");
+        });
+
     }
 
     public static function statusOptions()

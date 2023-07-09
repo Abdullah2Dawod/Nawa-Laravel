@@ -14,7 +14,7 @@ class ProductsController extends Controller
 
     public function show($slug)
     {
-        $product = Product::active()
+        $product = Product::active()->withoutGlobalScope('owner')
         ->where('slug' , '=' , $slug)
         ->firstOrFail();
 
@@ -22,7 +22,7 @@ class ProductsController extends Controller
 
         return view('shop.products.show' , [
             'product' => $product,
-            'gallery' => $gallery
+            'gallery' => $gallery,
         ]);
     }
 }
