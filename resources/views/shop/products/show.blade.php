@@ -2,7 +2,9 @@
 @section('title', 'Product Show')
 
 @section('content')
-    <!-- Start Item Details -->
+
+
+
 
     <section class="item-details section">
         <div class="container">
@@ -105,16 +107,6 @@
                                                     Cart</button>
                                             </div>
                                         </div>
-                                        <div class="col-lg-4 col-md-4 col-12">
-                                            <div class="wish-button">
-                                                <button class="btn"><i class="lni lni-reload"></i> Compare</button>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-12">
-                                            <div class="wish-button">
-                                                <button class="btn"><i class="lni lni-heart"></i> To Wishlist</button>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -176,9 +168,9 @@
                                     </div>
                                 </div>
 
-                                @foreach ($reviews as $item)
+                                @foreach ($product->reviews as $item)
                                     <div class="single-review">
-                                        <img src="https://via.placeholder.com/150x150" alt="#">
+                                        <img src="{{ asset('assets/images/users.jpg')}}" width="130px" alt="#">
                                         <div class="review-info">
                                             <h4>{{ $item->subject }}
                                                 <span>{{ $item->name }}</span>
@@ -203,63 +195,75 @@
                     </div>
                 </div>
 
-                <hr>
-                <div>
-                    <h2 class="section-title">Similar Products</h2>
-                    <div class="row">
-                        @foreach ($product->category->products()->where('id', '<>', $product->id)->get() as $similar_products)
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <!-- Start Single Product -->
-                                <div class="single-product">
-                                    <div class="product-image">
-                                        <img src="{{ $similar_products->image_url }}" alt="#"
-                                            class="img-thumbnail">
-                                        <div class="button">
-                                            <a href="{{ route('shop.products.show', $similar_products->slug) }}"
-                                                class="btn"><i class="lni lni-cart"></i> Add to Cart</a>
+                @if (count(
+                        $product->category->products()->where('id', '<>', $product->id)->get()) > 0)
+                    <hr>
+                    <div>
+                        <h2 class="section-title">Similar Products</h2>
+                        <div class="row">
+                            @foreach ($product->category->products()->where('id', '<>', $product->id)->get() as $similar_products)
+                                <div class="col-lg-3 col-md-6 col-12">
+                                    <!-- Start Single Product -->
+                                    <div class="single-product">
+                                        <div class="product-image">
+                                            <img src="{{ $similar_products->image_url }}" alt="#"
+                                                class="img-thumbnail">
+                                            <div class="button">
+                                                <a href="{{ route('shop.products.show', $similar_products->slug) }}"
+                                                    class="btn"><i class="lni lni-cart"></i> Add to Cart</a>
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <span class="category">{{ $similar_products->category->name }}</span>
+                                            <h4 class="title">
+                                                <a
+                                                    href="{{ route('shop.products.show', $similar_products->slug) }}">{{ $similar_products->name }}</a>
+                                            </h4>
+                                            <ul class="review">
+                                                <li><i class="lni lni-star-filled"></i></li>
+                                                <li><i class="lni lni-star-filled"></i></li>
+                                                <li><i class="lni lni-star-filled"></i></li>
+                                                <li><i class="lni lni-star-filled"></i></li>
+                                                <li><i class="lni lni-star"></i></li>
+                                                <li><span>4.0 Review(s)</span></li>
+                                            </ul>
+                                            <div class="price">
+                                                {{ $similar_products->price_formatted }}
+                                                @if ($similar_products->compare_price)
+                                                    <span
+                                                        class="discount-price">{{ $similar_products->compare_price_formatted }}</span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="product-info">
-                                        <span class="category">{{ $similar_products->category->name }}</span>
-                                        <h4 class="title">
-                                            <a
-                                                href="{{ route('shop.products.show', $similar_products->slug) }}">{{ $similar_products->name }}</a>
-                                        </h4>
-                                        <ul class="review">
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star"></i></li>
-                                            <li><span>4.0 Review(s)</span></li>
-                                        </ul>
-                                        <div class="price">
-                                            {{ $similar_products->price_formatted }}
-                                            @if ($similar_products->compare_price)
-                                                <span
-                                                    class="discount-price">{{ $similar_products->compare_price_formatted }}</span>
-                                            @endif
-                                        </div>
-                                    </div>
+                                    <!-- End Single Product -->
                                 </div>
-                                <!-- End Single Product -->
-                            </div>
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
 
-                </div>
+                    </div>
+                @endif
             </div>
         </div>
     </section>
+
+    <div class="row">
+        @if (session()->has('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
+    </div>
     <!-- End Item Details -->
 
     <!-- Review Modal -->
     <div class="modal fade review-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <form action="{{ route('reviews.store', ['id' => $product->id]) }}" method="post">
+        <form action="{{ route('reviews.store', $product->id) }}" method="post">
             @csrf
             <div class="modal-dialog">
                 <div class="modal-content">
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Leave a Review</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -269,7 +273,9 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="name">Your Name</label>
-                                    <input class="form-control" type="text" name="name" id="name" required>
+                                    <input class="form-control" type="text"
+                                        value="{{ $product->user->profile->first_name }} {{ $product->user->profile->last_name }} "
+                                        name="name" id="name" readonly>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -277,8 +283,8 @@
                                     <label for="email">Your Email</label>
 
                                     <input class="form-control" type="email"
-                                        value="@if (auth()->check()) {{ Auth::user()->profile->user->email }} @endif" name="email" id="email"
-                                        required>
+                                        value="@if (auth()->check()) {{ Auth::user()->profile->user->email }} @endif"
+                                        name="email" id="email" readonly>
 
                                 </div>
                             </div>
@@ -287,7 +293,11 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="subject">Subject</label>
-                                    <input class="form-control" type="text" name="subject" id="subject">
+                                    <input class="form-control @error('name') is-invalid @enderror" type="text" name="subject" id="subject"
+                                        value="{{ old('subject') }}">
+                                    @error('name')
+                                        <p>{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -305,7 +315,10 @@
                         </div>
                         <div class="form-group">
                             <label for="description">Review</label>
-                            <textarea class="form-control" id="description" name="description" rows="8"></textarea>
+                            <textarea class="form-control @error('name') is-invalid @enderror" id="description" name="description" rows="6">{{ old('description') }}</textarea>
+                            @error('name')
+                                <p>{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                     <div class="modal-footer button">

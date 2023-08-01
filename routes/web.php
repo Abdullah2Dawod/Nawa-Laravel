@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/review', [ReviewController::class, 'index']);
 Route::post('/review/{id}', [ReviewController::class, 'store'])->name('reviews.store');
+
 // Route::post('product/{id}/reviews', [ReviewController::class, 'index'])->name('reviews.store');
 
 require __DIR__ . '/auth.php';

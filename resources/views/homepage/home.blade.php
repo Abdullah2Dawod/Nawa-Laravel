@@ -189,7 +189,7 @@
                 </div>
             </div>
             <div class="row">
-                @foreach ($price_large_products->take(8) as $product)
+                @foreach ($moreQuantitativeProducts->take(8) as $product)
                         <div class="col-lg-3 col-md-6 col-12">
                             <!-- Start Single Product -->
                             <div class="single-product">
@@ -279,7 +279,7 @@
             <div class="row">
                 <div class="col-lg-8 col-md-12 col-12">
                     <div class="row">
-                        @foreach ($products->take(3) as $item)
+                        @foreach ($moreQuantitativeProducts->take(3) as $item)
                             <div class="col-lg-4 col-md-4 col-12">
                                 <!-- Start Single Product -->
                                 <div class="single-product">
@@ -456,7 +456,7 @@
                 </div>
             </div>
             <div class="row">
-                @foreach ($products->take(3) as $item)
+                @foreach ($lessQuantitativeProducts->take(3) as $item)
                     <div class="col-lg-4 col-md-6 col-12">
                         <!-- Start Single Blog -->
                         <div class="single-blog">
@@ -470,7 +470,7 @@
                                 <h4>
                                     <a href="#">{{ $item->price_formatted }}</a>
                                 </h4>
-                                <p>{{ $item->description }}</p>
+                                <p>{{ Str::limit($item->description, 90) }}</p>
                                 <div class="button">
                                     <a href="{{ route('shop.products.show', $item->slug) }}" class="btn">Read More</a>
                                 </div>

@@ -53,6 +53,11 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
 
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     public function cart()
     {
         return $this->belongsToMany(
@@ -88,7 +93,7 @@ class Product extends Model
 
     public function scopeFilter(Builder $query, $request)
     {
-        $query->when($request->search ?? false , function ($query, $value) {
+        $query->when($request->search ?? false, function ($query, $value) {
             $query->where(function ($query) use ($value) {
                 $query->where('products.name', 'LIKE', "%{$value}%")
                     ->orWhere('products.description', 'LIKE', "%{$value}%");
@@ -147,5 +152,18 @@ class Product extends Model
         return $query->whereHas('category', function ($query) use ($categoryType) {
             $query->where('name', $categoryType);
         });
+    }
+
+    public function scopeOrderByMoreQuantity($query)
+    {
+        return $query->orderBy('quantity', 'desc');
+    }
+    public function scopeOrderByLessQuantity($query)
+    {
+        return $query->orderBy('quantity', 'asc');
+    }
+    public function scopeOrderByNewProduct($query)
+    {
+        return $query->orderBy('updated_at', 'desc');
     }
 }

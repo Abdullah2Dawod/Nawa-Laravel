@@ -9,6 +9,7 @@ use App\Models\Messages;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
 use NumberFormatter;
@@ -31,13 +32,13 @@ class HomeController extends Controller
 
         $price_large_products = Product::where('price', '>=', 1000)->get();
 
+        $moreQuantitativeProducts = Product::orderByMoreQuantity()->get();
+        $lessQuantitativeProducts = Product::orderByMoreQuantity()->get();
+        $addNewProducts = Product::orderByNewProduct()->get();
+
 
         $mobiles = 'Mobiles';
         $mixers = 'Mixers';
-        // $mobiles = 'Mobiles';
-        // $mobiles = 'Mobiles';
-        // $mobiles = 'Mobiles';
-        // $mobiles = 'Mobiles';
 
         $products_mobiles = Product::with('category')->byCategoryType($mobiles)->get();
 
@@ -45,7 +46,7 @@ class HomeController extends Controller
         $products = Product::withoutGlobalScope('owner')
             ->with('category')  //Eager loud
             // ->active()
-            ->latest('updated_at')
+            // ->latest('updated_at')
             ->get();
 
         $formatter = new NumberFormatter('en', NumberFormatter::CURRENCY);
@@ -55,23 +56,10 @@ class HomeController extends Controller
             'cart' => $cart,
             'products_mobiles' => $products_mobiles,
             'price_large_products' => $price_large_products,
+            'moreQuantitativeProducts' => $moreQuantitativeProducts,
+            'lessQuantitativeProducts' => $lessQuantitativeProducts,
+            'addNewProducts' => $addNewProducts,
         ]);
-    }
-
-    public function product($id)
-    {
-        // $product = Product::findOrFail($id);
-        // // $products = Product::with('category')->get();
-        // $products = Product::with('category')->where('category_id', 'id')->get();
-        // return view('site.prdouctDetailes', compact('product', 'products'));
-
-        $products = Category::findOrFail($categoryId)->products;
-
-        $products = Product::where('category_id', $categoryId)->get();
-
-        $products = Product::whereHas('category', function ($query) use ($categoryId) {
-            $q->where('id', $categoryId);
-        })->get();
     }
 
     public function about()

@@ -22,11 +22,12 @@ class ReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:255|min:3',
-            'email' => 'required|max:255|min:3',
-            'subject' => 'nullable|max:255|min:3',
-            'rating' => 'nullable',
-            'description' => 'nullable|max:255|string',
+            'name' => 'required|min:3',
+            'email' => 'required|min:3',
+            'subject' => 'required|max:255|min:3',
+            'rating' => 'required',
+            'description' => 'required|max:255|string',
+            'product_id' => 'required|exists:products,id',
         ];
     }
 }
