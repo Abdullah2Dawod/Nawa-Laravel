@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderLine;
+use App\Models\User;
+use App\Notifications\NewOrderNotification;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Symfony\Component\Intl\Countries;
 
 class CheckoutController extends Controller
@@ -16,7 +19,7 @@ class CheckoutController extends Controller
     public function create()
     {
         $countries = Countries::getNames('en');
-        return view('shop.products.checkout' , [
+        return view('shop.products.checkout', [
             'countries' => $countries,
         ]);
     }
@@ -67,14 +70,28 @@ class CheckoutController extends Controller
             }
 
             // delete cart items
+            //  Cart::where('cookie_id', '=', $cookie_id)->delete();
 
-            Cart::where('cookie_id', '=', $cookie_id)->delete();
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', $e->getMessage());
+            return back()->withInput()
+                ->withErrors([
+                    'error' => $e->getMessage()
+                ])
+                ->with('error', $e->getMessage());
         }
 
+        // send notification to admin
+        $user = User::where('type', '=', 'super-admin')->first();
+        $user->notify( new NewOrderNotification($order) );
+
+
         return redirect()->route('checkout.success');
+    }
+
+    public function success()
+    {
+        return view('shop.products.success');
     }
 }

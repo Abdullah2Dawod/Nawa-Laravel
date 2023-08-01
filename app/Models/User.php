@@ -54,6 +54,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Product::class);
     }
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
 
     public function cart()
     {
@@ -62,5 +66,29 @@ class User extends Authenticatable implements MustVerifyEmail
         ->withPivot(['quantity'])
         ->withTimestamps()
         ->using(Cart::class);
+    }
+
+    const STATUS_ACTIVE   = 'active';
+    const STATUS_DRAFT    = 'draft';
+    const STATUS_ARCHIVED    = 'Archived';
+    const STATUS_SUPER_ADMIN = 'super_admin';
+    const STATUS_ADMIN = 'admin';
+    const STATUS_USER = 'user';
+
+    public static function statusOptions()
+    {
+        return [
+            self::STATUS_ACTIVE    => 'Active',
+            self::STATUS_DRAFT     => 'Draft',
+            self::STATUS_ARCHIVED  => 'Archived',
+        ];
+    }
+    public static function typeOptions()
+    {
+        return [
+            self::STATUS_SUPER_ADMIN    => 'super_admin',
+            self::STATUS_ADMIN     => 'admin',
+            self::STATUS_USER  => 'user',
+        ];
     }
 }

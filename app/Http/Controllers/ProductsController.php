@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+
 
 class ProductsController extends Controller
 {

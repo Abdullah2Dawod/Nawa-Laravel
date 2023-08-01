@@ -1,4 +1,6 @@
 @extends('layouts.admin')
+@section('sub_title', 'Trashed')
+
 @section('content')
     <header class="mb-4 d-flex">
         <h2 class="mb-4 fs-3"> Trashed Products </h2>

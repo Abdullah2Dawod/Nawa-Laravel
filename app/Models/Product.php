@@ -20,7 +20,17 @@ class Product extends Model
 
     protected $fillable = [
         'name', 'slug', 'category_id', 'description', 'short_description', 'price',
-        'compare_price', 'status', 'image', 'user_id',
+        'compare_price', 'status', 'image', 'user_id', 'id'
+    ];
+
+    // protected $guarded =[];
+
+    protected $appends = [
+        'image_url', 'price_formatted', 'compare_price_formatted',
+    ];
+
+    protected $hidden = [
+        'image', 'updated_at', 'deleted_at'
     ];
 
     public function category()
@@ -29,14 +39,33 @@ class Product extends Model
             'name' => 'Non-Category',
         ]);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id');
+    }
+
+    public function gallery()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
 
     public function cart()
     {
-        return $this->belongsToMany(User::class,
-        'carts' , 'product_id' , 'user_id', 'id ' , 'id')
-        ->withPivot(['quantity'])
-        ->withTimestamps()
-        ->using(Cart::class);
+        return $this->belongsToMany(
+            User::class,
+            'carts',
+            'product_id',
+            'user_id',
+            'id ',
+            'id'
+        )
+            ->withPivot(['quantity'])
+            ->withTimestamps()
+            ->using(Cart::class);
     }
 
     // protected static function booted()
@@ -49,35 +78,34 @@ class Product extends Model
 
     public function scopeActive(Builder $query)
     {
-        $query->where('status' , '=' , 'active');
+        $query->where('status', '=', 'active');
     }
 
-    public function scopeStatus(Builder $query , $status)
+    public function scopeStatus(Builder $query, $status)
     {
-        $query->where('status' , '=' , $status);
+        $query->where('status', '=', $status);
     }
 
-    public function scopeFilter(Builder $query , $request)
+    public function scopeFilter(Builder $query, $request)
     {
-        $query->when($request->search,function($query , $value) {
-            $query->where(function($query) use($value){
-                $query->where('products.name' , 'LIKE' , "%{$value}%")
-                ->orWhere('products.description' , 'LIKE' , "%{$value}%");
+        $query->when($request->search ?? false , function ($query, $value) {
+            $query->where(function ($query) use ($value) {
+                $query->where('products.name', 'LIKE', "%{$value}%")
+                    ->orWhere('products.description', 'LIKE', "%{$value}%");
             });
         })
-        ->when($request->status,function($query , $value) {
-            $query->where('products.status' , 'LIKE' , "$value");
-        })
-        ->when($request->category_id,function($query , $value) {
-            $query->where('products.category_id' , '=' , "$value");
-        })
-        ->when($request->price_min,function($query , $value) {
-            $query->where('products.price' , '<=' , "$value");
-        })
-        ->when($request->price_max,function($query , $value) {
-            $query->where('products.price' , '>=' , "$value");
-        });
-
+            ->when($request->status ?? false, function ($query, $value) {
+                $query->where('products.status', 'LIKE', "$value");
+            })
+            ->when($request->category_id ?? false, function ($query, $value) {
+                $query->where('products.category_id', '=', "$value");
+            })
+            ->when($request->price_min ?? false, function ($query, $value) {
+                $query->where('products.price', '<=', "$value");
+            })
+            ->when($request->price_max ?? false, function ($query, $value) {
+                $query->where('products.price', '>=', "$value");
+            });
     }
 
     public static function statusOptions()
@@ -95,7 +123,7 @@ class Product extends Model
         if ($this->image) {
             return Storage::disk('public')->url($this->image);
         }
-        return 'https://placehold.co/60x60?text=No+Image';
+        return 'https://placehold.co/600x400/orange/white?font=lato&text=NO Image';
     }
 
     public function getNameAttribute($value)
@@ -112,5 +140,12 @@ class Product extends Model
     {
         $compare_price = new NumberFormatter('en', NumberFormatter::CURRENCY); //ar.العربية
         return $compare_price->formatCurrency($this->compare_price, 'ILS');  // ILS -
+    }
+
+    public function scopeByCategoryType($query, $categoryType)
+    {
+        return $query->whereHas('category', function ($query) use ($categoryType) {
+            $query->where('name', $categoryType);
+        });
     }
 }

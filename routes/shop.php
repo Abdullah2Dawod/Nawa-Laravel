@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,4 +15,5 @@ Route::delete('/cart/{id}', [CartController::class, 'destroy'])
 
 Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store']);
+
 Route::get('/checkout/thankyou', [CheckoutController::class, 'success'])->name('checkout.success');

@@ -18,4 +18,15 @@ class Profile extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    const STATUS_MALE   = 'male';
+    const STATUS_FEMALE    = 'female';
+
+    public static function genderOptions()
+    {
+        return [
+            self::STATUS_MALE   => 'male',
+            self::STATUS_FEMALE   => 'female',
+        ];
+    }
 }

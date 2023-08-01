@@ -1,11 +1,12 @@
 @extends('layouts.admin')
-@section('content')
-    <h2 class="mb-4 fs-3">New category</h2>
+@section('sub_title', 'Categories / Create')
 
-    <form action="{{ route('categories.store') }}" method="post">
+@section('content')
+
+    <form action="{{ route('categories.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         @include('admin.categories._form', [
-            'Submit' => 'Update Category',
+            'Submit' => 'Create Category',
         ])
     </form>
 @endsection

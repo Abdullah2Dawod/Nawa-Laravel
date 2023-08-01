@@ -10,6 +10,8 @@ class OrderLine extends Pivot
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $table = 'order_lines';
 
     protected $fillable = [

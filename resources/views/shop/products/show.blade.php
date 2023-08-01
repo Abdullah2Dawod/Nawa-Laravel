@@ -3,8 +3,23 @@
 
 @section('content')
     <!-- Start Item Details -->
+
     <section class="item-details section">
         <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    @if (session()->has('success'))
+                        <div class="alert alert-success d-flex align-items-center" role="alert">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                <path
+                                    d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z" />
+                            </svg>
+                            &nbsp;&nbsp; | {{ session('success') }}
+                        </div>
+                    @endif
+                </div>
+            </div>
             <div class="top-area">
                 <div class="row align-items-center">
                     <div class="col-lg-6 col-md-12 col-12">
@@ -86,7 +101,8 @@
                                     <div class="row align-items-end">
                                         <div class="col-lg-4 col-md-4 col-12">
                                             <div class="button cart-button">
-                                                <button class="btn" type="submit" style="width: 100%;">Add to Cart</button>
+                                                <button class="btn" type="submit" style="width: 100%;">Add to
+                                                    Cart</button>
                                             </div>
                                         </div>
                                         <div class="col-lg-4 col-md-4 col-12">
@@ -145,124 +161,45 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 col-12">
-                        <div class="single-block give-review">
-                            <h4>4.5 (Overall)</h4>
-                            <ul>
-                                <li>
-                                    <span>5 stars - 38</span>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                </li>
-                                <li>
-                                    <span>4 stars - 10</span>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star"></i>
-                                </li>
-                                <li>
-                                    <span>3 stars - 3</span>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star"></i>
-                                    <i class="lni lni-star"></i>
-                                </li>
-                                <li>
-                                    <span>2 stars - 1</span>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star"></i>
-                                    <i class="lni lni-star"></i>
-                                    <i class="lni lni-star"></i>
-                                </li>
-                                <li>
-                                    <span>1 star - 0</span>
-                                    <i class="lni lni-star-filled"></i>
-                                    <i class="lni lni-star"></i>
-                                    <i class="lni lni-star"></i>
-                                    <i class="lni lni-star"></i>
-                                    <i class="lni lni-star"></i>
-                                </li>
-                            </ul>
-                            <!-- Button trigger modal -->
-                            <button type="button" class="btn review-btn" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal">
-                                Leave a Review
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-lg-8 col-12">
+                    <div class="col-12">
                         <div class="single-block">
                             <div class="reviews">
-                                <h4 class="title">Latest Reviews</h4>
-                                <!-- Start Single Review -->
-                                <div class="single-review">
-                                    <img src="https://via.placeholder.com/150x150" alt="#">
-                                    <div class="review-info">
-                                        <h4>Awesome quality for the price
-                                            <span>Jacob Hammond
-                                            </span>
-                                        </h4>
-                                        <ul class="stars">
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                        </ul>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                            tempor...</p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="flex">
+                                        <h4 class="title">Latest Reviews</h4>
+                                    </div>
+                                    <div class="flex">
+                                        <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal">
+                                            Leave a Review
+                                        </button>
                                     </div>
                                 </div>
-                                <!-- End Single Review -->
-                                <!-- Start Single Review -->
-                                <div class="single-review">
-                                    <img src="https://via.placeholder.com/150x150" alt="#">
-                                    <div class="review-info">
-                                        <h4>My husband love his new...
-                                            <span>Alex Jaza
-                                            </span>
-                                        </h4>
-                                        <ul class="stars">
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star"></i></li>
-                                        </ul>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                            tempor...</p>
+
+                                @foreach ($reviews as $item)
+                                    <div class="single-review">
+                                        <img src="https://via.placeholder.com/150x150" alt="#">
+                                        <div class="review-info">
+                                            <h4>{{ $item->subject }}
+                                                <span>{{ $item->name }}</span>
+                                            </h4>
+                                            <ul class="stars">
+                                                <li><i class="lni lni-star-filled"></i></li>
+                                                <li><i class="lni lni-star-filled"></i></li>
+                                                <li><i class="lni lni-star-filled"></i></li>
+                                                <li><i class="lni lni-star-filled"></i></li>
+                                                <li><i class="lni lni-star-filled"></i></li>
+                                            </ul>
+                                            <p>{{ $item->description }}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <!-- End Single Review -->
-                                <!-- Start Single Review -->
-                                <div class="single-review">
-                                    <img src="https://via.placeholder.com/150x150" alt="#">
-                                    <div class="review-info">
-                                        <h4>I love the built quality...
-                                            <span>Jacob Hammond
-                                            </span>
-                                        </h4>
-                                        <ul class="stars">
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                            <li><i class="lni lni-star-filled"></i></li>
-                                        </ul>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                            tempor...</p>
-                                    </div>
-                                </div>
-                                <!-- End Single Review -->
+                                @endforeach
+
                             </div>
                         </div>
+                    </div>
+                    <div>
+                        {{ $reviews->links() }}
                     </div>
                 </div>
 
@@ -319,57 +256,64 @@
     <!-- Review Modal -->
     <div class="modal fade review-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Leave a Review</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="review-name">Your Name</label>
-                                <input class="form-control" type="text" id="review-name" required>
+        <form action="{{ route('reviews.store', ['id' => $product->id]) }}" method="post">
+            @csrf
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Leave a Review</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="name">Your Name</label>
+                                    <input class="form-control" type="text" name="name" id="name" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="email">Your Email</label>
+
+                                    <input class="form-control" type="email"
+                                        value="@if (auth()->check()) {{ Auth::user()->profile->user->email }} @endif" name="email" id="email"
+                                        required>
+
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="review-email">Your Email</label>
-                                <input class="form-control" type="email" id="review-email" required>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="subject">Subject</label>
+                                    <input class="form-control" type="text" name="subject" id="subject">
+                                </div>
                             </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="rating">Rating</label>
+                                    <select class="form-control" name="rating" id="rating">
+                                        <option value="star5">5 Stars</option>
+                                        <option value="star4">4 Stars</option>
+                                        <option value="star3">3 Stars</option>
+                                        <option value="star2">2 Stars</option>
+                                        <option value="star1">1 Star</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Review</label>
+                            <textarea class="form-control" id="description" name="description" rows="8"></textarea>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="review-subject">Subject</label>
-                                <input class="form-control" type="text" id="review-subject" required>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="review-rating">Rating</label>
-                                <select class="form-control" id="review-rating">
-                                    <option>5 Stars</option>
-                                    <option>4 Stars</option>
-                                    <option>3 Stars</option>
-                                    <option>2 Stars</option>
-                                    <option>1 Star</option>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="modal-footer button">
+                        <button type="submit" class="btn">Send Review</button>
                     </div>
-                    <div class="form-group">
-                        <label for="review-message">Review</label>
-                        <textarea class="form-control" id="review-message" rows="8" required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer button">
-                    <button type="button" class="btn">Submit Review</button>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
     <!-- End Review Modal -->
 

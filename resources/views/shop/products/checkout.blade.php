@@ -100,18 +100,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
-                                                <div class="single-checkbox checkbox-style-3">
-                                                    <input type="checkbox" id="checkbox-3">
-                                                    <label for="checkbox-3"><span></span></label>
-                                                    <p>My delivery and mailing addresses are the same.</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
                                                 <div class="single-form button">
-                                                    <button class="btn" data-bs-toggle="collapse"
-                                                        data-bs-target="#collapseFour" aria-expanded="false"
-                                                        aria-controls="collapseFour">next
-                                                        step</button>
+                                                    <button class="btn" type="submit">Place Order</button>
                                                 </div>
                                             </div>
                                         </div>

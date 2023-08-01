@@ -1,4 +1,6 @@
 @extends('layouts.admin')
+@section('sub_title' , 'Categories')
+
 @section('content')
     <header class="mb-4 d-flex">
         <h2 class="mb-4 fs-3">{{ $title }} </h2>
@@ -17,11 +19,18 @@
             </div>
         @endif
     </div>
+
+    <form action="{{ URL::current() }}" method="get" class="form-inline">
+        <input type="text" name="search" class="form-control mb-2 mr-sm-2" value="{{ request('saerch') }}" placeholder="Search Category...">
+        <button type="submit" class="btn btn-success mb-2 mr-sm-2" style="border: none">Search</button>
+    </form>
+
     <table class="table table-striped">
         <thead>
             <tr class="table-dark">
                 <th>Id</th>
                 <th>Name</th>
+                <th>Image</th>
                 <th>product Count</th>
                 <th>product AVG Price</th>
                 <th>Edit</th>
@@ -34,6 +43,11 @@
                 <tr>
                     <td>{{ $category->id }}</td>
                     <td>{{ $category->name }} </td>
+                    <td>
+                        <a href="{{ $category->image_url }}">
+                            <img src="{{ $category->image_url }}" width="70" alt="">
+                        </a>
+                    </td>
                     <td>{{ $category->products_count }} </td>
                     <td>{{ $category->products_avg_price }} </td>
                     <td><a href="{{ route('categories.edit', $category->id) }}" class="btn-sm btn btn-outline-secondary">

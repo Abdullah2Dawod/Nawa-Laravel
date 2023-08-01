@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\View;
+
 use NumberFormatter;
 
 class CartController extends Controller

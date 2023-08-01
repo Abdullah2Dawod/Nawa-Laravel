@@ -1,4 +1,6 @@
 @extends('layouts.admin')
+@section('sub_title' , 'Edit Products')
+
 @section('content')
     <h2 class="mb-4 fs-3">New product</h2>
 

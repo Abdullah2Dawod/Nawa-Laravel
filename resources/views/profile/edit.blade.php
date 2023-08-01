@@ -1,87 +1,113 @@
 @extends('layouts.shop')
-@section('title', 'Update Profile')
+@section('title', '')
 
 @section('content')
 
-    <!-- Start Contact Area -->
-    <section id="contact-us" class="contact-us section">
-        <div class="container">
-            <div class="contact-head">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="section-title">
-                            <h2>Update Your Profile</h2>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            You have Errors :
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
+
+
+
+    <form class="form" method="post" action="{{ route('profile.update', $user->id) }}">
+        @csrf
+        @method('patch')
+        <div class="container mt-5 mb-5">
+            <div class="card border-primary text-bg-primary mb-3">
+                <div class="card-header">Header</div>
+
+                <div class="row p-3">
+
+                    <div class="col-3">
+                        <div class="mb-3">
+                            <label for="first_name">First Name</label>
+                            <input name="first_name" class="form-control" type="text" placeholder="first Name"
+                                value="{{ old('first_name', $user->profile->first_name) }}" required="required">
                         </div>
-                    </div>
-                </div>
+                        <div class="mb-3">
+                            <label for="last_name">Last Name</label>
+                            <input name="last_name" class="form-control" type="text" placeholder="last name"
+                                value="{{ old('first_name', $user->profile->last_name) }}" required="required">
+                        </div>
 
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        You have Errors :
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <div class="contact-info">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="contact-form-head">
-                                <div class="form-main">
-                                    <form class="form" method="post" action="{{ route('profile.update') }}">
-                                        @csrf
-                                        @method('patch')
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-12">
-                                                <div class="form-group">
-                                                    <input name="first_name" type="text" placeholder="first Name"
-                                                        value="{{ old('first_name', $user->profile->first_name) }}"
-                                                        required="required">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-12">
-                                                <div class="form-group">
-                                                    <input name="last_name" type="text" placeholder="last name"
-                                                        value="{{ old('first_name', $user->profile->last_name) }}"
-                                                        required="required">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-12">
-                                                <div class="form-group">
-                                                    <input name="email" type="email" placeholder="Your Email"
-                                                        value="{{ old('email', $user->email) }}" required="required">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-12">
-                                                <div class="form-group">
-                                                    <input name="birthday" type="date" placeholder="birthday"
-                                                        value="{{ old('birthday', $user->profile->birthday) }}"
-                                                        required="required">
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group message" style="d">
-                                                    <textarea name="message" placeholder="Your Message"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-group button">
-                                                    <button type="submit" class="btn">Update</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
+                        <div class="mb-3">
+                            <label for="gender">Gender</label>
+                            @foreach ($gender_options as $value => $label)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gender" id=""
+                                        value="{{ $value }}" @checked($value == old('gender', $user->gender))>
+                                    <label class="form-check-label" for="{{ $value }}">
+                                        {{ $label }}
+                                    </label>
                                 </div>
-                            </div>
+                            @endforeach
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+                        <div class="mb-3">
+                            <label for="email">Email</label>
+                            <input name="email" class="form-control" type="email" placeholder="Your Email"
+                                value="{{ old('email', $user->email) }}" required="required">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="birthday">Birthday</label>
+                            <input name="birthday" class="form-control" type="date" placeholder="birthday"
+                                value="{{ old('birthday', $user->profile->birthday) }}" required="required">
+                        </div>
+                        <div class="mb-3">
+                            <label for="street">Street</label>
+                            <input name="street" class="form-control" type="text" placeholder="street"
+                                value="{{ old('street', $user->profile->street) }}" required="required">
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+                        <div class="mb-3">
+                            <label for="city">City</label>
+                            <input name="city" class="form-control" type="text" placeholder="Your City"
+                                value="{{ old('city', $user->profile->city) }}" required="required">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="province">Province</label>
+                            <input name="province" class="form-control" type="text" placeholder="province"
+                                value="{{ old('province', $user->profile->province) }}" required="required">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="postal_code">Postal Code</label>
+                            <input name="postal_code" class="form-control" type="text" placeholder="postal code"
+                                value="{{ old('postal_code', $user->profile->postal_code) }}" required="required">
+                        </div>
+
+                    </div>
+
+                    <div class="col-3">
+                        <div class="mb-3">
+                            <label for="country_code">Country Code</label>
+                            <input name="country_code" class="form-control" type="text" placeholder="country code"
+                                value="{{ old('country_code', $user->profile->country_code) }}" required="required">
                         </div>
                     </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success">Update</button>
                 </div>
             </div>
         </div>
-    </section>
-    <!--/ End Contact Area -->
-
+    </form>
 @endsection

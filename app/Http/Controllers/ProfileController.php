@@ -3,21 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Cart;
+use App\Models\Profile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\View;
+
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function edit(Request $request)
     {
         return view('profile.edit', [
             'user' => Auth::user(),
+            'gender_options' => Profile:: genderOptions(),
+
         ]);
     }
 
@@ -37,7 +42,7 @@ class ProfileController extends Controller
 
         $user->profile->fill($request->validated())->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return back()->with('status', 'profile-updated');
     }
 
     /**

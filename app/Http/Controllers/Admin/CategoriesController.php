@@ -6,15 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::withAvg('products', 'price')->withCount('products')->paginate();
+        $categories = Category::withAvg('products', 'price')
+            ->withCount('products')->filter($request)->paginate(15);
 
         return view('admin.categories.index', [
             'title' => 'categories List',
@@ -27,7 +29,7 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create' , [
+        return view('admin.categories.create', [
             'category' => new Category(),
         ]);
     }
@@ -38,14 +40,23 @@ class CategoriesController extends Controller
     public function store(CategoryRequest $request)
     {
 
-        $category = Category::create( $request->validated() );
+        // $category = Category::create($request->validated());
 
         // $categories = new Category();
         // $categories->name = $request->input('name');
         // $categories->save();
 
+        $date = $request->validated();
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = $file->store('uploads/images', 'public');
+            $date['image'] = $path;
+        }
+
+        $category = Category::create($date);
+
         return redirect()->route('categories.index')
-        ->with('success', "category $category->name Has Been Added Successfully");
+            ->with('success', "category $category->name Has Been Added Successfully");
     }
 
     /**
@@ -62,7 +73,7 @@ class CategoriesController extends Controller
     public function edit(Category $category)
     {
         // $category = Category::findOrFail($id);
-        return view('admin.categories.edit' , [
+        return view('admin.categories.edit', [
             'category' => $category,
         ]);
     }
@@ -73,7 +84,21 @@ class CategoriesController extends Controller
     public function update(CategoryRequest $request, Category $category)
     {
 
-        $category->update( $request->validated() );
+        // $category->update($request->validated());
+
+        $date = $request->validated();
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = $file->store('uploads/images', 'public');
+            $date['image'] = $path;
+        }
+
+        $old_image = $category->image;
+        $category->update($date);
+
+        if ($old_image && $old_image != $category->image) {
+            Storage::disk('public')->delete($old_image);
+        }
 
         // $category = Category::findOrFail($id);
 
@@ -82,9 +107,8 @@ class CategoriesController extends Controller
         // $category->save();
 
         return redirect()
-        ->route('categories.index')
-        ->with('success', "Product $category->name Has Been Updated Successfully");
-        ;
+            ->route('categories.index')
+            ->with('success', "Product $category->name Has Been Updated Successfully");
     }
 
     /**
@@ -98,8 +122,8 @@ class CategoriesController extends Controller
         // Product::destroy($id);
 
         return redirect()
-        ->route('categories.index')
-        ->with('success' , "Category $category->name Has Been Deleted Successfully");
+            ->route('categories.index')
+            ->with('success', "Category $category->name Has Been Deleted Successfully");
     }
 
     public function trashed()
@@ -123,6 +147,9 @@ class CategoriesController extends Controller
     {
         $categories = Category::onlyTrashed()->findOrFail($id);
         $categories->forceDelete();
+        if ($categories->image) {
+            Storage::disk('public')->delete($categories->image);
+        }
 
         return redirect()
             ->route('categories.trashed')

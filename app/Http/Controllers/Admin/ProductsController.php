@@ -141,7 +141,7 @@ class ProductsController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**

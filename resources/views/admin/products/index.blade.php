@@ -1,4 +1,6 @@
 @extends('layouts.admin')
+@section('sub_title' , 'Products')
+
 @section('content')
     <header class="mb-4 d-flex">
         <h2 class="mb-4 fs-3">{{ $title }} </h2>
@@ -37,7 +39,7 @@
         <input type="number" name="price_max" class="form-control mb-2 mr-sm-2" value="{{ request('price_max') }}" placeholder="Max Price">
         <button type="submit" class="btn btn-success mb-2 mr-sm-2" style="border: none">Search</button>
     </form>
-    <table class="table table-striped text-center">
+    <table class="table table-striped text-center mt-2">
         <thead>
             <tr class="table-dark">
                 <th>Id</th>
@@ -54,16 +56,11 @@
             @foreach ($products as $product)
                 <tr>
                     <td>{{ $product->id }}</td>
-                    <th>
+                    <td>
                         <a href="{{ $product->image_url }}">
                             <img src="{{ $product->image_url }}" width="60" alt="">
                         </a>
-                    </th>
-                    {{--  <td>
-                        <a href="{{$product->image_link}}">
-                            <img src="{{$product->image_link}}" width="60" alt="">
-                        </a>
-                    </td>  --}}
+                    </td>
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->category_name }}</td>
                     <td>{{ $product->price_formatted }}</td>
