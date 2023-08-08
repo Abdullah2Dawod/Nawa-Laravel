@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 
 class Cart extends Pivot
 {
@@ -14,7 +18,7 @@ class Cart extends Pivot
 
     protected $table = 'carts';
     protected $fillable = [
-        'cookie_id' , 'user_id' , 'product_id' , 'quantity'
+        'cookie_id', 'user_id', 'product_id', 'quantity'
     ];
 
     public function user()
@@ -25,9 +29,12 @@ class Cart extends Pivot
     {
         return $this->belongsTo(Product::class);
     }
-
-    // public function setUniqueIds()
-    // {
-    //     return ['id'];
-    // }
+    protected static function booted()
+    {
+        static::addGlobalScope('cart_auth', function (Builder $query) {
+            $cookie_id = request()->cookie('cart_id');
+            $query->where('user_id', '=', Auth::id())
+                ->where('cookie_id', '=', $cookie_id);
+        });
+    }
 }

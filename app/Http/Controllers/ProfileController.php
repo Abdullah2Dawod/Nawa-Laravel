@@ -21,7 +21,7 @@ class ProfileController extends Controller
     {
         return view('profile.edit', [
             'user' => Auth::user(),
-            'gender_options' => Profile:: genderOptions(),
+            'gender_options' => Profile::genderOptions(),
 
         ]);
     }

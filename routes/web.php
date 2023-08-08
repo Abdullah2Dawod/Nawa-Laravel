@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductMobileController;
 use App\Http\Controllers\ProductsController as ControllersProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ShoppingController;
 use App\Http\Controllers\showLaptopController;
 use App\Http\Controllers\showMobileController;
 use Illuminate\Support\Facades\Route;
@@ -23,13 +24,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index' ])->name('home');
-// Route::get('/', [HomeController::class, 'showMobiles' ])->name('show_mobile');
-
 Route::get('/about_us', [HomeController::class, 'about'])->name('about_us');
-// Route::get('/contact_us', [HomeController::class, 'index_contact'])->name('contact_us');
 Route::get('/contact_us', [HomeController::class, 'create'])->name('contact_us');
 Route::post('/contact_us', [HomeController::class, 'store'])->name('store_contact_us');
 
+Route::get('/category/{id}', [ShoppingController::class, 'category'])->name('shopping.category');
 
 Route::get('/home', [AdminHomeController::class, 'index'])
     ->middleware(['auth', 'auth.type:admin,super-admin'])->prefix('/admin')->name('admin.homepage');

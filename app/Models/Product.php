@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use NumberFormatter;
 
@@ -160,10 +161,11 @@ class Product extends Model
     }
     public function scopeOrderByLessQuantity($query)
     {
-        return $query->orderBy('quantity', 'asc');
+        return $query->orderBy('price', 'asc');
     }
     public function scopeOrderByNewProduct($query)
     {
         return $query->orderBy('updated_at', 'desc');
     }
+
 }

@@ -17,6 +17,10 @@ class ReviewController extends Controller
      */
     public function index()
     {
+        // $reviews = Review::simplePaginate();
+        // return view('shop.products.show', [
+        //     'reviews' => $reviews,
+        // ]);
     }
 
     /**
@@ -35,13 +39,13 @@ class ReviewController extends Controller
     public function store(ReviewRequest $request, $id)
     {
 
-        if (Auth::check()){
-        $review = Review::create($request->validated());
-        $review->save();
+        if (Auth::check()) {
+            $review = Review::create($request->validated());
+            $review->save();
 
-        return back()
-            ->with('success', "Your review has been submitted successfully, thank you!!");
-        }else{
+            return back()
+                ->with('success', "Your review has been submitted successfully, thank you!!");
+        } else {
             return redirect()->route('register');
         }
     }

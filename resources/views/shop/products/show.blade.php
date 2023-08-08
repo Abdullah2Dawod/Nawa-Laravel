@@ -168,9 +168,11 @@
                                     </div>
                                 </div>
 
-                                @foreach ($product->reviews as $item)
+
+
+                                @foreach ($product->reviews->take(3) as $item)
                                     <div class="single-review">
-                                        <img src="{{ asset('assets/images/users.jpg')}}" width="130px" alt="#">
+                                        <img src="{{ asset('assets/images/users.jpg') }}" width="130px" alt="#">
                                         <div class="review-info">
                                             <h4>{{ $item->subject }}
                                                 <span>{{ $item->name }}</span>
@@ -187,11 +189,15 @@
                                     </div>
                                 @endforeach
 
+                                @if ($product->reviews->count() > 3)
+                                    <button style="font-size: 12px !important; border: none"
+                                        class="btn btn-outline-secondary">Show More</button>
+                                @endif
+
                             </div>
                         </div>
                     </div>
                     <div>
-                        {{ $reviews->links() }}
                     </div>
                 </div>
 
@@ -247,15 +253,6 @@
         </div>
     </section>
 
-    <div class="row">
-        @if (session()->has('success'))
-            <div class="alert alert-success" role="alert">
-                {{ session('success') }}
-            </div>
-        @endif
-    </div>
-    <!-- End Item Details -->
-
     <!-- Review Modal -->
     <div class="modal fade review-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -272,17 +269,16 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="name">Your Name</label>
-                                    <input class="form-control" type="text"
-                                        value="{{ $product->user->profile->first_name }} {{ $product->user->profile->last_name }} "
+                                    {{--  <label for="name">Your Name</label>  --}}
+                                    <input class="form-control" type="hidden"
+                                        value="@if (auth()->check()) {{ $product->user->profile->first_name }} {{ $product->user->profile->last_name }} @endif"
                                         name="name" id="name" readonly>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="email">Your Email</label>
-
-                                    <input class="form-control" type="email"
+                                    {{--  <label for="email">Your Email</label>  --}}
+                                    <input class="form-control" type="hidden"
                                         value="@if (auth()->check()) {{ Auth::user()->profile->user->email }} @endif"
                                         name="email" id="email" readonly>
 
@@ -293,8 +289,8 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="subject">Subject</label>
-                                    <input class="form-control @error('name') is-invalid @enderror" type="text" name="subject" id="subject"
-                                        value="{{ old('subject') }}">
+                                    <input class="form-control @error('name') is-invalid @enderror" type="text"
+                                        name="subject" id="subject" value="{{ old('subject') }}">
                                     @error('name')
                                         <p>{{ $message }}</p>
                                     @enderror
@@ -315,7 +311,8 @@
                         </div>
                         <div class="form-group">
                             <label for="description">Review</label>
-                            <textarea class="form-control @error('name') is-invalid @enderror" id="description" name="description" rows="6">{{ old('description') }}</textarea>
+                            <textarea class="form-control @error('name') is-invalid @enderror" id="description" name="description"
+                                rows="6">{{ old('description') }}</textarea>
                             @error('name')
                                 <p>{{ $message }}</p>
                             @enderror

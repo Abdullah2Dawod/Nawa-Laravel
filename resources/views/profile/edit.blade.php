@@ -44,7 +44,7 @@
                             @foreach ($gender_options as $value => $label)
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="gender" id=""
-                                        value="{{ $value }}" @checked($value == old('gender', $user->gender))>
+                                        value="{{ $value }}" @checked($value == old('gender', $user->profile->gender)) @endchecked>
                                     <label class="form-check-label" for="{{ $value }}">
                                         {{ $label }}
                                     </label>

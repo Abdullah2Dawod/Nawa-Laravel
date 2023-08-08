@@ -20,6 +20,7 @@ class ProfileUpdateRequest extends FormRequest
             'last_name' => ['string', 'max:255'],
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'birthday' => ['date', 'before:today'],
+            'gender' => 'required',
             'street' => ['string', 'max:255'],
             'city' => ['string', 'max:255'],
             'province' => ['string', 'max:255'],

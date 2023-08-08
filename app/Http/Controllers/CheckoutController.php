@@ -12,15 +12,33 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use NumberFormatter;
 use Symfony\Component\Intl\Countries;
 
 class CheckoutController extends Controller
 {
     public function create()
     {
+        $cookie_id = request()->cookie('cart_id');
+        $query = Cart::query();
+
+        if ($cookie_id) {
+         $query->where('user_id', '=', Auth::id())
+          ->where('cookie_id', '=', $cookie_id);
+        }
+
+          $cart = $query->get();
+
+        $total = $cart->sum(function($item) {
+            return $item->product->price * $item->quantity;
+         });
+         $formatter = new NumberFormatter('en', NumberFormatter::CURRENCY);
+
         $countries = Countries::getNames('en');
         return view('shop.products.checkout', [
             'countries' => $countries,
+            'cart' => $cart,
+            'total' => $formatter->formatCurrency($total, 'ILS'),
         ]);
     }
 
@@ -44,7 +62,8 @@ class CheckoutController extends Controller
         $validated['currency'] = 'ILS';
 
         $cookie_id = $request->cookie('cart_id');
-        $cart = Cart::with('product')->where('cookie_id', '=', $cookie_id)->get();
+        $cart = Cart::with('product')
+        ->where('cookie_id', '=', $cookie_id)->get();
 
         $total = $cart->sum(function ($item) {
             return $item->product->price * $item->quantity;

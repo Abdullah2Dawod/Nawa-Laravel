@@ -6,40 +6,52 @@
     @csrf
     @method('put')
 
-    <div class="card card-info">
+    <div class="card card-info flex">
         <div class="card-header">
             <h3 class="card-title">Edit Users</h3>
         </div>
         <div class="row p-3">
-            <div class="col-md-4">
-                <x-form.input label="First Name" id="name" name="name"
-                    value="{{ $user->name }}" type="text" />
-                <x-form.input label="Last Name" id="email" name="email"
-                    value="{{ $user->email }}" type="text" />
+            <div class="col align-self-center justify-content-around">
+                <x-form.input label="First Name" id="name" name="name" value="{{ $user->name }}"
+                    type="text" />
+                <x-form.input label="Last Name" id="email" name="email" value="{{ $user->email }}"
+                    type="text" />
             </div>
 
             <div class="border-right"></div>
 
-            <div class="col-md-4">
+            <div class="col align-self-center justify-content-around">
 
                 <div class="form-floating mb-3">
                     <label for="status">User Status</label>
-                    <select name="status" id="status" class="form-control form-select">
-                        <option value="">Type</option>
-                        @foreach ($status_options as $value => $label)
-                            <option @selected($value == old('value', $user->value)) value="{{ $value }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
+                    @foreach ($status_options as $value => $label)
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="status" id="status"
+                                value="{{ $value }}" @checked($value == old('status', $user->status)) @endchecked>
+                            <label class="form-check-label" for="{{ $value }}">
+                                {{ $label }}
+                            </label>
+                        </div>
+                    @endforeach
                 </div>
 
+            </div>
+
+            <div class="border-right"></div>
+
+            <div class="col align-self-center justify-content-around">
+
                 <div class="form-floating mb-3">
-                    <label for="type">User Type</label>
-                    <select name="type" id="type" class="form-control form-select">
-                        <option value="">Type</option>
-                        @foreach ($status_types as $value => $label)
-                            <option @selected($value == old('value', $user->value)) value="{{ $value }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
+                    <label for="type">User Types</label>
+                    @foreach ($status_types as $value => $label)
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="type" id="type"
+                                value="{{ $value }}" @checked($value == old('type', $user->type)) @endchecked>
+                            <label class="form-check-label" for="{{ $value }}">
+                                {{ $label }}
+                            </label>
+                        </div>
+                    @endforeach
                 </div>
 
             </div>
@@ -51,9 +63,6 @@
             <button type="submit" class="btn btn-success">Update Users</button>
         </div>
     </div>
-
-
-
 </form>
 
 @endsection

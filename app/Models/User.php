@@ -20,6 +20,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        // 'type',
+        // 'status',
         'password',
     ];
 
@@ -69,24 +71,24 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     const STATUS_ACTIVE   = 'active';
-    const STATUS_DRAFT    = 'draft';
-    const STATUS_ARCHIVED    = 'Archived';
-    const STATUS_SUPER_ADMIN = 'super_admin';
+    const STATUS_INACTIVE    = 'inactive';
+    const STATUS_BLOCKED    = 'blocked';
+    const STATUS_SUPER_ADMIN = 'super-admin';
     const STATUS_ADMIN = 'admin';
     const STATUS_USER = 'user';
 
     public static function statusOptions()
     {
         return [
-            self::STATUS_ACTIVE    => 'Active',
-            self::STATUS_DRAFT     => 'Draft',
-            self::STATUS_ARCHIVED  => 'Archived',
+            self::STATUS_ACTIVE    => 'active',
+            self::STATUS_INACTIVE     => 'inactive',
+            self::STATUS_BLOCKED  => 'blocked',
         ];
     }
     public static function typeOptions()
     {
         return [
-            self::STATUS_SUPER_ADMIN    => 'super_admin',
+            self::STATUS_SUPER_ADMIN    => 'super-admin',
             self::STATUS_ADMIN     => 'admin',
             self::STATUS_USER  => 'user',
         ];

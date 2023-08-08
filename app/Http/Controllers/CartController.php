@@ -15,8 +15,10 @@ class CartController extends Controller
 {
     public function index(Request $request)
     {
-        $cookie_id = $request->cookie('cart_id');
-        $cart = Cart::with('product')->where('cookie_id', '=', $cookie_id)->get();
+        // $cookie_id = $request->cookie('cart_id');
+        $cart = Cart::with('product')->get();
+        // ->where('user_id' , '=' , Auth::id())
+        // ->where('cookie_id', '=', $cookie_id)->get();
 
         $total = $cart->sum(function($item) {
            return $item->product->price * $item->quantity;
@@ -45,6 +47,7 @@ class CartController extends Controller
 
         $item = Cart::where('cookie_id', '=', $cookie_id)
             ->where('product_id', '=', $request->input('product_id'))
+            ->where('user_id' , '=' , Auth::id())
             ->first();
 
         if ($item) {

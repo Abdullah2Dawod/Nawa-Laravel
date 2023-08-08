@@ -41,7 +41,7 @@
                             alt="User Image">
                     </div>
                     <div class="info pt-2">
-                        <a href="{{ route('profile.edit') }}" class="d-block">{{ Auth::user()->profile->first_name }}</a>
+                        <a href="{{ route('profile.edit', Auth::user()->profile->id) }}" class="d-block">{{ Auth::user()->profile->first_name }}</a>
                     </div>
                     <div class="info pt-1">
                         <form action="{{ route('logout') }}" method="post">

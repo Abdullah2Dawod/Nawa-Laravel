@@ -189,7 +189,7 @@
                 </div>
             </div>
             <div class="row">
-                @foreach ($moreQuantitativeProducts->take(8) as $product)
+                @foreach ($addNewProducts->take(8) as $product)
                         <div class="col-lg-3 col-md-6 col-12">
                             <!-- Start Single Product -->
                             <div class="single-product">
@@ -204,7 +204,7 @@
                                 <div class="product-info">
                                     <span class="category">{{ $product->category->name }}</span>
                                     <h4 class="title">
-                                        <a href="{{ route('shop.products.show', $product->slug) }}">{{ $product->name }}</a>
+                                        <a href="{{ route('shop.products.show', $product->slug) }}">{{ Str::limit($product->name, 24) }}</a>
                                     </h4>
                                     <ul class="review">
                                         <li><i class="lni lni-star-filled"></i></li>
@@ -279,7 +279,7 @@
             <div class="row">
                 <div class="col-lg-8 col-md-12 col-12">
                     <div class="row">
-                        @foreach ($moreQuantitativeProducts->take(3) as $item)
+                        @foreach ($price_large_products->take(3) as $item)
                             <div class="col-lg-4 col-md-4 col-12">
                                 <!-- Start Single Product -->
                                 <div class="single-product">
@@ -295,7 +295,7 @@
                                         <span class="category">{{ $item->category->name }}</span>
                                         <h4 class="title">
                                             <a
-                                                href="{{ route('shop.products.show', $item->slug) }}">{{ $item->name }}</a>
+                                                href="{{ route('shop.products.show', $item->slug) }}">{{ Str::limit($item->name, 24) }}</a>
                                         </h4>
                                         <ul class="review">
                                             <li><i class="lni lni-star-filled"></i></li>
@@ -396,7 +396,7 @@
                             </div>
                             <div class="list-info">
                                 <h3>
-                                    <a href="{{ route('shop.products.show', $item->slug) }}">{{ $item->name }}</a>
+                                    <a href="{{ route('shop.products.show', $item->slug) }}">{{ Str::limit($item->name, 15) }}</a>
                                 </h3>
                                 <span>{{ $item->price_formatted }}</span>
                             </div>
@@ -414,7 +414,7 @@
                             </div>
                             <div class="list-info">
                                 <h3>
-                                    <a href="{{ route('shop.products.show', $item->slug) }}">{{ $item->name }}</a>
+                                    <a href="{{ route('shop.products.show', $item->slug) }}">{{ Str::limit($item->name, 15) }}</a>
                                 </h3>
                                 <span>{{ $item->price_formatted }}</span>
                             </div>
@@ -431,7 +431,7 @@
                             </div>
                             <div class="list-info">
                                 <h3>
-                                    <a href="{{ route('shop.products.show', $item->slug) }}">{{ $item->name }}</a>
+                                    <a href="{{ route('shop.products.show', $item->slug) }}">{{ Str::limit($item->name, 15) }}</a>
                                 </h3>
                                 <span>{{ $item->price_formatted }}</span>
                             </div>
@@ -466,7 +466,7 @@
                                 </a>
                             </div>
                             <div class="blog-content">
-                                <a class="category" href="javascript:void(0)">{{ $item->name }}</a>
+                                <a class="category" href="javascript:void(0)">{{ Str::limit($item->name, 24) }}</a>
                                 <h4>
                                     <a href="#">{{ $item->price_formatted }}</a>
                                 </h4>
